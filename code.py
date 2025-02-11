@@ -72,3 +72,5 @@ if __name__ == "__main__":
     if result:
         print(f"Predicted: {result} ({confidence:.2f}%) - Class: {label}")
 
+
+
