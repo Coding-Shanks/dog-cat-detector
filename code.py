@@ -19,22 +19,20 @@ CAT_CLASSES = [
     "tabby", "tiger_cat", "persian_cat", "siamese_cat", "egyptian_cat"
 ]
 
-
 def load_and_preprocess_image(img_path):
     """Load an image, convert it to RGB, resize it, and preprocess it for EfficientNetB0."""
     img = cv2.imread(img_path)
-
+    
     if img is None:
         raise FileNotFoundError(f"Image not found at {img_path}")
-
+    
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = cv2.resize(img, (224, 224))  # Resize for EfficientNetB0
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)  # Expand batch dimension
     img_array = preprocess_input(img_array)
-
+    
     return img_array, img
-
 
 def classify_image(img_path):
     """Classifies an image as a dog or a cat using EfficientNetB0."""
@@ -42,11 +40,11 @@ def classify_image(img_path):
         img_array, img = load_and_preprocess_image(img_path)
         preds = model.predict(img_array)
         decoded_preds = decode_predictions(preds, top=3)[0]  # Get top 3 predictions
-
+        
         # Extract class labels and confidence scores
         best_label = decoded_preds[0][1].lower()  # Best predicted class
         confidence = decoded_preds[0][2] * 100  # Confidence score
-
+        
         # Check if it belongs to dog or cat categories
         if any(dog in best_label for dog in DOG_CLASSES):
             prediction = "Dog"
@@ -67,10 +65,10 @@ def classify_image(img_path):
         print(f"Error: {e}")
         return None, None, None
 
-
 # Example usage
 if __name__ == "__main__":
     image_path = input("Enter the image path: ")  # Get image path from user
     result, confidence, label = classify_image(image_path)
     if result:
         print(f"Predicted: {result} ({confidence:.2f}%) - Class: {label}")
+
